@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeBites - Homemade Food Delivery</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1950&q=80') 
+                  no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Lighter Overlay for clearer food image */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(2px);
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 60px 40px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+      animation: fadeIn 1.2s ease;
+    }
+
+    .container h1 {
+      font-size: 3rem;
+      color: #ffcc66;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+      animation: glow 2s infinite alternate;
+    }
+
+    .container p {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-bottom: 35px;
+      text-shadow: 1px 1px 4px #000;
+    }
+
+    .auth-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .auth-btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.4s ease;
+      box-shadow: 0 0 15px rgba(255, 94, 98, 0.7);
+    }
+
+    .login-btn {
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+    }
+
+    .signup-btn {
+      background: linear-gradient(45deg, #43a047, #66bb6a);
+      color: white;
+    }
+
+    .auth-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(255, 165, 0, 0.8);
+    }
+
+    .guest-btn {
+      background: transparent;
+      border: 2px solid #ffcc66;
+      color: #ffcc66;
+      margin-top: 15px;
+      padding: 12px 25px;
+    }
+
+    .guest-btn:hover {
+      background: #ffcc66;
+      color: #333;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      color: #f5f5f5;
+      text-align: center;
+      width: 100%;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      z-index: 10;
+      text-shadow: 1px 1px 4px #000;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes glow {
+      from {text-shadow: 0 0 10px #ff9966, 0 0 20px #ff9966;}
+      to {text-shadow: 0 0 20px #ffb84d, 0 0 40px #ff9966;}
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      .container {
+        padding: 40px 20px;
+      }
+
+      .container h1 {
+        font-size: 2.2rem;
+      }
+
+      .auth-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .auth-btn {
+        width: 200px;
+      }
+    }
+
+    /* MODAL STYLES */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 20px;
+      padding: 35px 25px;
+      width: 370px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      color: #ff6b4a;
+      margin-bottom: 5px;
+    }
+
+    .modal-content p {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .modal-content input {
+      width: 85%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .modal-btn {
+      width: 90%;
+      padding: 10px;
+      background: linear-gradient(45deg, #ff7e5f, #fd3a69);
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .modal-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #fd3a69, #ff7e5f);
+    }
+
+    .toggle-text {
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .toggle-text a {
+      color: #fd3a69;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .close-btn {
+      background: #eee;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    .close-btn:hover {
+      background: #ddd;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>🍴 HomeBites</h1>
+    <p>Delicious homemade food, delivered fresh to your doorstep.</p>
+
+    <div class="auth-buttons">
+      <button class="auth-btn login-btn" onclick="openLogin()">Login</button>
+      <button class="auth-btn signup-btn" onclick="openSignup()">Sign Up</button>
+    </div>
+    
+    <div>
+      <button class="auth-btn guest-btn" onclick="continueAsGuest()">Continue as Guest</button>
+    </div>
+  </div>
+
+  <footer>© 2025 HomeBites | Taste made with love ❤️</footer>
+
+  <!-- LOGIN/SIGNUP MODAL -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Welcome Back!</h2>
+      <p id="modalSubtitle">Login to continue your delicious journey 🍴</p>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <input type="email" placeholder="Enter your Email" required>
+        <input type="password" placeholder="Enter your Password" required>
+        <button type="submit" class="modal-btn">Login</button>
+        <p class="toggle-text">Don't have an account? 
+          <a href="#" onclick="toggleToSignup()">Sign Up</a>
+        </p>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signupForm" style="display:none;">
+        <input type="text" placeholder="Full Name" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <input type="password" placeholder="Confirm Password" required>
+        <button type="submit" class="modal-btn">Create Account</button>
+        <p class="toggle-text">Already have an account? 
+          <a href="#" onclick="toggleToLogin()">Login</a>
+        </p>
+      </form>
+
+      <button class="close-btn" onclick="closeAuthModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Auth Modal Functions
+    function openLogin() {
+      document.getElementById('authModal').style.display = 'flex';
+      toggleToLogin();
+    }
+
+    function openSignup() {
+      document.getElementById('authModal').style.display = 'flex';
+      toggleToSignup();
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').style.display = 'none';
+    }
+
+    function toggleToSignup() {
+      document.getElementById("loginForm").style.display = "none";
+      document.getElementById("signupForm").style.display = "block";
+      document.getElementById("modalTitle").innerText = "Join HomeBites!";
+      document.getElementById("modalSubtitle").innerText = "Create your account to order homemade food 🍲";
+    }
+
+    function toggleToLogin() {
+      document.getElementById("signupForm").style.display = "none";
+      document.getElementById("loginForm").style.display = "block";
+      document.getElementById("modalTitle").innerText = "Welcome Back!";
+      document.getElementById("modalSubtitle").innerText = "Login to continue your delicious journey 🍴";
+    }
+
+    function continueAsGuest() {
+      // Redirect to restaurants page as guest
+      window.location.href = "restaurants.html";
+    }
+
+    // Form Submissions
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelector('input[type="password"]').value;
+      
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        
+        console.log("User logged in:", user.email);
+        alert(`Welcome back, ${user.email}! 🎉`);
+        closeAuthModal();
+        
+        // Redirect to restaurants page
+        window.location.href = "restaurants.html";
+        
+      } catch (error) {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+      }
+    });
+
+    document.getElementById("signupForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      
+      const name = this.querySelector('input[type="text"]').value;
+      const email = this.querySelector('input[type="email"]').value;
+      const password = this.querySelectorAll('input[type="password"]')[0].value;
+      const confirmPassword = this.querySelectorAll('input[type="password"]')[1].value;
+      
+      if (password !== confirmPassword) {
+        alert("Passwords don't match!");
+        return;
+      }
+      
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+        
+        await user.updateProfile({
+          displayName: name
+        });
+        
+        await database.ref('users/' + user.uid).set({
+          name: name,
+          email: email,
+          createdAt: new Date().toISOString()
+        });
+        
+        alert(`Account Created! 🎉 Welcome to HomeBites, ${name}!`);
+        closeAuthModal();
+        
+        // Redirect to restaurants page
+        window.location.href = "restaurants.html";
+        
+      } catch (error) {
+        console.error("Signup error:", error);
+        alert("Signup failed: " + error.message);
+      }
+    });
+  </script>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAyTvInHBSVKZNBEOnNYCqZ4XBbvMgW2-g",
+      authDomain: "homebites-57723.firebaseapp.com",
+      databaseURL: "https://homebites-57723-default-rtdb.firebaseio.com",
+      projectId: "homebites-57723",
+      storageBucket: "homebites-57723.firebasestorage.app",
+      messagingSenderId: "176325574598",
+      appId: "1:176325574598:web:13a92d38823239279fbcc7",
+      measurementId: "G-2VZT3F6YXN"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Realtime Database and Auth
+    const database = firebase.database();
+    const auth = firebase.auth();
+
+    console.log("=== FIREBASE CONFIGURATION ===");
+    console.log("Firebase initialized:", firebase.apps.length > 0);
+    console.log("Database URL:", firebaseConfig.databaseURL);
+
+    // Test database connection
+    const testRef = database.ref('.info/connected');
+    testRef.on('value', (snapshot) => {
+      console.log("Database connected:", snapshot.val());
+    });
+
+    // Monitor auth state
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("User automatically logged in:", user.email);
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  </script>
+</body>
+</html>

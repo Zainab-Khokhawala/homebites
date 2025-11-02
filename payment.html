@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment | HomeBites</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff8f2;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(90deg, #ff7043, #ff8a65);
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
+
+    header span {
+      margin-left: 10px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff7043;
+      margin-bottom: 20px;
+    }
+
+    form label {
+      font-weight: 500;
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    #cardDetails, #upiDetails {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .subscription-section, .donation-section {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .plans {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .plan {
+      width: 300px;
+      background: #fff;
+      border: 2px solid #ffccbc;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: 0.3s;
+    }
+
+    .plan:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .plan h3 {
+      color: #ff5722;
+      margin-bottom: 10px;
+    }
+
+    .plan ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    .plan ul li {
+      margin: 8px 0;
+    }
+
+    .plan button {
+      margin-top: 15px;
+      background: linear-gradient(90deg, #ff7043, #ff8a65);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .donation-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .donation-buttons button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+    }
+
+    .donate {
+      background: linear-gradient(90deg, #ff7043, #ff8a65);
+    }
+
+    .sponsor {
+      background: linear-gradient(90deg, #43a047, #66bb6a);
+    }
+
+    .place-order {
+      display: block;
+      width: 100%;
+      margin-top: 40px;
+      background: linear-gradient(90deg, #ff7043, #ff8a65);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .place-order:hover {
+      opacity: 0.9;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    🍴 <span>HomeBites</span>
+  </header>
+
+  <div class="container">
+    <h2>Complete Your Order</h2>
+
+    <form id="orderForm">
+      <label>Full Name</label>
+      <input type="text" required placeholder="Enter your full name">
+
+      <label>Delivery Address</label>
+      <input type="text" required placeholder="Enter your address">
+
+      <label>Payment Method</label>
+      <select id="paymentMethod" required onchange="showPaymentFields()">
+        <option value="">Select payment method</option>
+        <option value="card">Credit / Debit Card</option>
+        <option value="upi">UPI / Wallet</option>
+        <option value="cod">Cash on Delivery</option>
+      </select>
+
+      <!-- Credit/Debit Card Fields -->
+      <div id="cardDetails">
+        <label>Card Number</label>
+        <input type="text" maxlength="16" placeholder="Enter 16-digit card number">
+        <label>CVV</label>
+        <input type="password" maxlength="3" placeholder="Enter CVV">
+      </div>
+
+      <!-- UPI Fields -->
+      <div id="upiDetails">
+        <label>UPI ID</label>
+        <input type="text" placeholder="example@upi">
+      </div>
+    </form>
+
+    <!-- Subscription Plans -->
+    <div class="subscription-section">
+      <h2>Weekly & Monthly Tiffin Service</h2>
+      <p>Subscribe and save! Get fresh homemade meals delivered daily 🍱</p>
+      <div class="plans">
+        <div class="plan">
+          <h3>Weekly Plan</h3>
+          <p><strong>₹500/week</strong></p>
+          <ul>
+            <li>7 meals (lunch or dinner)</li>
+            <li>Free delivery</li>
+            <li>Pause anytime</li>
+          </ul>
+          <button type="button">Subscribe Now</button>
+        </div>
+
+        <div class="plan">
+          <h3>Monthly Plan</h3>
+          <p><strong>₹1800/month</strong></p>
+          <ul>
+            <li>30 meals (lunch or dinner)</li>
+            <li>Priority delivery</li>
+            <li>Flexible meal swaps</li>
+          </ul>
+          <button type="button">Subscribe Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Donation Section -->
+    <div class="donation-section">
+      <h2>Share the Joy of Food ❤️</h2>
+      <p>After placing your order, you can donate a meal to someone in need.</p>
+      <div class="donation-buttons">
+        <button type="button" class="donate">Donate ₹20 with your order</button>
+        <button type="button" class="sponsor">Sponsor a Full Meal ₹60</button>
+      </div>
+    </div>
+
+    <button class="place-order" onclick="placeOrder()">Place Order</button>
+  </div>
+
+  <footer>
+    © 2025 HomeBites | Made with ❤️ by our chefs
+  </footer>
+
+   <script>
+    function showPaymentFields() {
+      const method = document.getElementById('paymentMethod').value;
+      const card = document.getElementById('cardDetails');
+      const upi = document.getElementById('upiDetails');
+
+      card.style.display = (method === 'card') ? 'block' : 'none';
+      upi.style.display = (method === 'upi') ? 'block' : 'none';
+    }
+
+    async function placeOrder() {
+      try {
+        console.log("Place order clicked");
+        
+        // Check if user is authenticated
+        const user = auth.currentUser;
+        console.log("Current user:", user);
+        
+        if (!user) {
+          alert("Please login to place an order! Redirecting to login...");
+          window.location.href = "restaurants.html";
+          return;
+        }
+
+        // Get user's cart from Realtime Database
+        const cartRef = database.ref('carts/' + user.uid);
+        const snapshot = await cartRef.once('value');
+        const cartItems = snapshot.exists() ? snapshot.val().items : [];
+        
+        console.log("Cart items from database:", cartItems);
+        
+        if (cartItems.length === 0) {
+          alert("Your cart is empty! Please add items first.");
+          window.location.href = "restaurants.html";
+          return;
+        }
+
+        // Get form data
+        const customerName = document.querySelector('input[placeholder="Enter your full name"]').value;
+        const deliveryAddress = document.querySelector('input[placeholder="Enter your address"]').value;
+        
+        if (!customerName || !deliveryAddress) {
+          alert("Please fill in your name and delivery address!");
+          return;
+        }
+
+        // Calculate total
+        const total = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        
+        // Generate order ID
+        const orderId = 'ORD' + Date.now();
+        
+        // Save order to Realtime Database
+        const orderData = {
+          userId: user.uid,
+          items: cartItems,
+          total: total,
+          status: 'placed',
+          createdAt: new Date().toISOString(),
+          deliveryAddress: deliveryAddress,
+          customerName: customerName,
+          customerEmail: user.email
+        };
+        
+        console.log("Saving order:", orderData);
+        await database.ref('orders/' + orderId).set(orderData);
+
+        // Clear cart after successful order
+        await cartRef.set({ items: [] });
+        
+        // Also clear localStorage
+        localStorage.removeItem("cart");
+        
+        alert(`✅ Order #${orderId} placed successfully! Your delicious meal is on its way 🍽️`);
+        window.location.href = "index.html";
+        
+      } catch (error) {
+        console.error("Order error:", error);
+        alert("Error placing order: " + error.message);
+      }
+    }
+  </script>
+
+  <!-- REMOVE DUPLICATES - KEEP ONLY THIS ONCE -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAyTvInHBSVKZNBEOnNYCqZ4XBbvMgW2-g",
+      authDomain: "homebites-57723.firebaseapp.com",
+      databaseURL: "https://homebites-57723-default-rtdb.firebaseio.com",
+      projectId: "homebites-57723",
+      storageBucket: "homebites-57723.firebasestorage.app",
+      messagingSenderId: "176325574598",
+      appId: "1:176325574598:web:13a92d38823239279fbcc7",
+      measurementId: "G-2VZT3F6YXN"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Realtime Database and Auth
+    const database = firebase.database();
+    const auth = firebase.auth();
+
+    console.log("=== FIREBASE CONFIGURATION ===");
+    console.log("Firebase initialized:", firebase.apps.length > 0);
+    console.log("Database URL:", firebaseConfig.databaseURL);
+    console.log("Database instance:", database);
+    console.log("Auth instance:", auth);
+
+    // Monitor authentication state
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("✅ User is logged in on payment page:", user.email);
+        // User is signed in, you can pre-fill the form if needed
+        document.querySelector('input[placeholder="Enter your full name"]').value = user.displayName || "";
+      } else {
+        console.log("❌ No user logged in on payment page");
+        // Optionally show a message or redirect
+      }
+    });
+
+    // Also check immediately
+    console.log("Initial auth state:", auth.currentUser);
+
+    // Test database connection
+    const testRef = database.ref('.info/connected');
+    testRef.on('value', (snapshot) => {
+      console.log("Database connected:", snapshot.val());
+    });
+
+    // Test database write
+    const debugRef = database.ref('debug');
+    debugRef.set({
+      test: "Connection successful",
+      timestamp: new Date().toISOString()
+    }).then(() => {
+      console.log("✅ Database write test: SUCCESS");
+    }).catch((error) => {
+      console.error("❌ Database write test: FAILED", error);
+    });
+  </script>
+</body>
+</html>

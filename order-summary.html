@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Summary - HomeBites</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff7f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .summary-container {
+      max-width: 500px;
+      background-color: white;
+      margin: 60px auto;
+      border-radius: 12px;
+      padding: 30px 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #ff6600;
+      margin-bottom: 25px;
+    }
+
+    .summary-header i {
+      margin-right: 10px;
+      font-size: 24px;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 16px;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .price {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .free {
+      color: green;
+      font-weight: 600;
+    }
+
+    .total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 15px;
+      color: #ff6600;
+    }
+
+    .proceed-btn {
+      display: block;
+      width: 100%;
+      background-color: #ff6600;
+      color: white;
+      border: none;
+      padding: 15px 0;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 25px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .proceed-btn:hover {
+      background-color: #e65500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      color: #777;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+  </style>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="summary-container">
+    <div class="summary-header">
+      <i class="fas fa-shopping-cart"></i> Order Summary
+    </div>
+
+    <div id="orderItems"></div>
+
+    <div class="item">
+      <span>Delivery Fee</span>
+      <span class="free">FREE</span>
+    </div>
+
+    <div class="total">
+      <span>Total</span>
+      <span id="totalAmount">₹0</span>
+    </div>
+
+    <button class="proceed-btn" onclick="proceedToPayment()">Proceed to Payment</button>
+  </div>
+
+  <footer>© 2025 HomeBites. All Rights Reserved.</footer>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const orderContainer = document.getElementById("orderItems");
+    const totalDisplay = document.getElementById("totalAmount");
+
+    try {
+      const user = auth.currentUser;
+      let cartItems = [];
+      let total = 0;
+
+      if (user) {
+        // Load from Realtime Database if user is logged in
+        const cartRef = database.ref('carts/' + user.uid);
+        const snapshot = await cartRef.once('value');
+        
+        if (snapshot.exists()) {
+          cartItems = snapshot.val().items || [];
+        }
+      } else {
+        // Fallback to localStorage
+        cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      }
+
+      if (cartItems.length === 0) {
+        orderContainer.innerHTML = "<p style='text-align:center;'>Your cart is empty 🛒</p>";
+      } else {
+        orderContainer.innerHTML = "";
+        
+        cartItems.forEach(item => {
+          const itemName = item.item || item.name;
+          const itemQty = item.qty || item.quantity || 1;
+          const itemTotal = item.price * itemQty;
+
+          const div = document.createElement("div");
+          div.classList.add("item");
+          div.innerHTML = `
+            <span>${itemName} ${itemQty > 1 ? `(x${itemQty})` : ""}</span>
+            <span class="price">₹${itemTotal}</span>
+          `;
+          orderContainer.appendChild(div);
+          total += itemTotal;
+        });
+      }
+
+      totalDisplay.textContent = `₹${total}`;
+
+    } catch (error) {
+      console.error("Error loading cart:", error);
+      orderContainer.innerHTML = "<p style='text-align:center;color:red;'>Error loading cart</p>";
+    }
+  });
+
+  // ✅ Proceed to Payment button
+  window.proceedToPayment = function() {
+    const user = auth.currentUser;
+    let cartItems = [];
+
+    if (user) {
+      // For logged-in users, we'll load from database on payment page
+      cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    } else {
+      // For guest users, use localStorage
+      cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    }
+
+    if (cartItems.length === 0) {
+      alert("Your cart is empty! Please add items first.");
+      return;
+    }
+    
+    alert("Redirecting to payment page...");
+    window.location.href = "payment.html";
+  };
+</script>
+
+<!-- Firebase Scripts (Compat version) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<script>
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAyTvInHBSVKZNBEOnNYCqZ4XBbvMgW2-g",
+    authDomain: "homebites-57723.firebaseapp.com",
+    databaseURL: "https://homebites-57723-default-rtdb.firebaseio.com",
+    projectId: "homebites-57723",
+    storageBucket: "homebites-57723.firebasestorage.app",
+    messagingSenderId: "176325574598",
+    appId: "1:176325574598:web:13a92d38823239279fbcc7",
+    measurementId: "G-2VZT3F6YXN"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // Initialize Realtime Database and Auth
+  const database = firebase.database();
+  const auth = firebase.auth();
+
+  console.log("=== FIREBASE CONFIGURATION ===");
+  console.log("Firebase initialized:", firebase.apps.length > 0);
+  console.log("Database URL:", firebaseConfig.databaseURL);
+  console.log("Database instance:", database);
+  console.log("Auth instance:", auth);
+
+  // Test database connection
+  const testRef = database.ref('.info/connected');
+  testRef.on('value', (snapshot) => {
+    console.log("Database connected:", snapshot.val());
+  });
+
+  // Test database write
+  const debugRef = database.ref('debug');
+  debugRef.set({
+    test: "Connection successful",
+    timestamp: new Date().toISOString()
+  }).then(() => {
+    console.log("✅ Database write test: SUCCESS");
+  }).catch((error) => {
+    console.error("❌ Database write test: FAILED", error);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HomeBites | Kitchens</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=80') 
+                  no-repeat center center/cover;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: background 0.5s ease;
+    }
+
+    nav {
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      box-shadow: 0 3px 10px rgba(255, 94, 98, 0.3);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      margin-left: 10px;
+    }
+
+    .cart {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.6rem;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: white;
+      color: #ff5e62;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .main {
+      text-align: center;
+      margin-top: 80px;
+      animation: fadeIn 1s ease;
+    }
+
+    .main h2 {
+      color: #ff5e62;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(255, 112, 67, 0.4);
+      animation: glow 2s infinite alternate;
+    }
+
+    .kitchen-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .kitchen-btn {
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 15px 35px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 94, 98, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .kitchen-btn:hover {
+      transform: scale(1.08);
+      background: linear-gradient(45deg, #ffb347, #ff6347);
+      box-shadow: 0 8px 20px rgba(255, 94, 98, 0.5);
+    }
+
+    .food-items {
+      display: none;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin: 60px auto;
+      width: 90%;
+    }
+
+    .food-card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(255, 112, 67, 0.2);
+      padding: 20px;
+      width: 250px;
+      transition: 0.3s ease;
+      text-align: center;
+    }
+
+    .food-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(255, 94, 98, 0.4);
+    }
+
+    .food-card img {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
+
+    .food-card h3 {
+      color: #ff5e62;
+      margin-bottom: 8px;
+    }
+
+    .food-card p {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .food-card .price {
+      font-weight: bold;
+      color: #222;
+      margin: 5px 0;
+    }
+
+    .food-card button {
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .food-card button:hover {
+      background: linear-gradient(45deg, #ffb347, #ff6347);
+      transform: scale(1.05);
+    }
+
+    footer {
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @keyframes glow {
+      from {text-shadow: 0 0 10px #ff9966, 0 0 20px #ff9966;}
+      to {text-shadow: 0 0 20px #ffb84d, 0 0 40px #ff9966;}
+    }
+
+    /* CART MODAL */
+    .cart-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .cart-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .cart-box h2 {
+      color: #ff5e62;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+
+    .cart-info {
+      flex: 1;
+    }
+
+    .qty {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .qty button {
+      background: #ff5e62;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .cart-total {
+      text-align: right;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .continue-btn {
+      display: block;
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 15px auto 0;
+      width: 60%;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .close-btn {
+      display: block;
+      margin: 10px auto 0;
+      background: #eee;
+      border: none;
+      border-radius: 10px;
+      padding: 8px;
+      width: 50%;
+      cursor: pointer;
+    }
+    
+    /* Back Button Styles */
+    .back-button {
+      position: fixed;
+      top: 100px;
+      left: 20px;
+      background: linear-gradient(45deg, #ff9966, #ff5e62);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 94, 98, 0.3);
+      z-index: 100;
+      display: none;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #ffb347, #ff6347);
+    }
+  </style>
+</head>
+
+<body>
+  
+  <nav>
+    <div class="logo">🍴 <span>HomeBites</span></div>
+    <div class="cart" onclick="viewCart()">🛒
+      <div class="cart-count" id="cartCount">0</div>
+    </div>
+  </nav>
+
+  <div class="main" id="main">
+    <h2>Choose Your Kitchen</h2>
+    <div class="kitchen-buttons">
+      <button class="kitchen-btn" onclick="showItems('indian')">Indian Kitchen</button>
+      <button class="kitchen-btn" onclick="showItems('italian')">Italian Kitchen</button>
+      <button class="kitchen-btn" onclick="showItems('chinese')">Chinese Kitchen</button>
+    </div>
+  </div>
+
+  <!-- Indian Kitchen -->
+  <div class="food-items" id="indian">
+    <div class="food-card">
+      <img src="https://ministryofcurry.com/wp-content/uploads/2024/06/chicken-biryani-5.jpg" alt="Chicken Biryani">
+      <h3>Chicken Biryani</h3>
+      <p>By Chef Aarav</p>
+      <p>⭐ 4.8</p>
+      <div class="price">₹180</div>
+      <button onclick="addToCart('Chicken Biryani',180,'https://ministryofcurry.com/wp-content/uploads/2024/06/chicken-biryani-5.jpg','Chef Aarav')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU2GVSX6yMjCLHtHBaQwyqjUw1rkC1sF9H8g&s" alt="Paneer Butter Masala">
+      <h3>Paneer Butter Masala</h3>
+      <p>By Chef Meera</p>
+      <p>⭐ 4.9</p>
+      <div class="price">₹220</div>
+      <button onclick="addToCart('Paneer Butter Masala',220,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSU2GVSX6yMjCLHtHBaQwyqjUw1rkC1sF9H8g&s','Chef Meera')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2021/06/masala-dosa-recipe-500x500.jpg" alt="Masala Dosa">
+      <h3>Masala Dosa</h3>
+      <p>By Chef Ravi</p>
+      <p>⭐ 4.7</p>
+      <div class="price">₹140</div>
+      <button onclick="addToCart('Masala Dosa',140,'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/06/masala-dosa-recipe-500x500.jpg','Chef Ravi')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://media.istockphoto.com/id/469160387/photo/gujarati-thali.jpg?s=612x612&w=0&k=20&c=0OdpRueSvOZXcrziOk0AD7AGyckpwp9IjcS6EUQ5Qdc=" alt="Gujarati Thali">
+      <h3>Gujarati Thali</h3>
+      <p>By Chef Kiran</p>
+      <p>⭐ 4.6</p>
+      <div class="price">₹200</div>
+      <button onclick="addToCart('Gujarati Thali',200,'https://media.istockphoto.com/id/469160387/photo/gujarati-thali.jpg?s=612x612&w=0&k=20&c=0OdpRueSvOZXcrziOk0AD7AGyckpwp9IjcS6EUQ5Qdc=','Chef Kiran')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://ministryofcurry.com/wp-content/uploads/2025/08/samosa-6.jpg" alt="Samosa">
+      <h3>Samosa</h3>
+      <p>By Chef Deepak</p>
+      <p>⭐ 4.5</p>
+      <div class="price">₹60</div>
+      <button onclick="addToCart('Samosa',60,'https://ministryofcurry.com/wp-content/uploads/2025/08/samosa-6.jpg','Chef Deepak')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://i.pinimg.com/736x/bd/c0/9c/bdc09c96ae38d4a8a98b388041365b09.jpg" alt="Tandoori Chicken">
+      <h3>Tandoori Chicken</h3>
+      <p>By Chef Ayaan</p>
+      <p>⭐ 4.9</p>
+      <div class="price">₹260</div>
+      <button onclick="addToCart('Tandoori Chicken',260,'https://i.pinimg.com/736x/bd/c0/9c/bdc09c96ae38d4a8a98b388041365b09.jpg','Chef Ayaan')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsdHbLpoZ41iDhrAmMy7KT0OX3sgHek0FWwg&s" alt="Butter Chicken">
+      <h3>Butter Chicken</h3>
+      <p>By Chef Rohit</p>
+      <p>⭐ 4.8</p>
+      <div class="price">₹280</div>
+      <button onclick="addToCart('Butter Chicken',280,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsdHbLpoZ41iDhrAmMy7KT0OX3sgHek0FWwg&s','Chef Rohit')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://shwetainthekitchen.com/wp-content/uploads/2022/01/Idli-Sambar.jpg" alt="Idli Sambhar">
+      <h3>Idli Sambhar</h3>
+      <p>By Chef Kavya</p>
+      <p>⭐ 4.4</p>
+      <div class="price">₹120</div>
+      <button onclick="addToCart('Idli Sambhar',120,'https://shwetainthekitchen.com/wp-content/uploads/2022/01/Idli-Sambar.jpg','Chef Kavya')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://cdn1.foodviva.com/static-content/food-images/snacks-recipes/pani-puri/pani-puri.jpg" alt="Pani Puri">
+      <h3>Pani Puri</h3>
+      <p>By Chef Asha</p>
+      <p>⭐ 4.5</p>
+      <div class="price">₹80</div>
+      <button onclick="addToCart('Pani Puri',80,'https://cdn1.foodviva.com/static-content/food-images/snacks-recipes/pani-puri/pani-puri.jpg','Chef Asha')">Add</button>
+    </div>
+
+    <div class="food-card">
+      <img src="https://www.funfoodfrolic.com/wp-content/uploads/2023/04/Dal-Makhani-Blog-500x500.jpg" alt="Dal Makhani">
+      <h3>Dal Makhani</h3>
+      <p>By Chef Mohan</p>
+      <p>⭐ 4.7</p>
+      <div class="price">₹170</div>
+      <button onclick="addToCart('Dal Makhani',170,'https://www.funfoodfrolic.com/wp-content/uploads/2023/04/Dal-Makhani-Blog-500x500.jpg','Chef Mohan')">Add</button>
+    </div>
+  </div>
+
+  <!-- Italian Kitchen -->
+  <div class="food-items" id="italian">
+    <div class="food-card"><img src="https://www.acouplecooks.com/wp-content/uploads/2022/10/Margherita-Pizza-093.jpg" alt=""><h3>Margherita Pizza</h3><p>By Chef Marco</p><p>⭐ 4.9</p><div class="price">₹300</div><button onclick="addToCart('Margherita Pizza',300,'https://www.acouplecooks.com/wp-content/uploads/2022/10/Margherita-Pizza-093.jpg','Chef Marco')">Add</button></div>
+    <div class="food-card"><img src="https://www.indianhealthyrecipes.com/wp-content/uploads/2024/04/white-sauce-pasta.jpg" alt=""><h3>White Sauce Pasta</h3><p>By Chef Luigi</p><p>⭐ 4.7</p><div class="price">₹250</div><button onclick="addToCart('White Sauce Pasta',250,'https://www.indianhealthyrecipes.com/wp-content/uploads/2024/04/white-sauce-pasta.jpg','Chef Luigi')">Add</button></div>
+    <div class="food-card"><img src="https://thecozycook.com/wp-content/uploads/2022/04/Lasagna-Recipe-F5.jpg" alt=""><h3>Lasagna</h3><p>By Chef Sofia</p><p>⭐ 4.8</p><div class="price">₹350</div><button onclick="addToCart('Lasagna',350,'https://thecozycook.com/wp-content/uploads/2022/04/Lasagna-Recipe-F5.jpg','Chef Sofia')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI8f_NZblZ6edrkpe_8GLLfGJ1s5g_JgAKqA&s" alt=""><h3>Bruschetta</h3><p>By Chef Matteo</p><p>⭐ 4.6</p><div class="price">₹180</div><button onclick="addToCart('Bruschetta',180,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSI8f_NZblZ6edrkpe_8GLLfGJ1s5g_JgAKqA&s','Chef Matteo')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW94P_sB3PxdGxzlUHm1Dw0cI5N1V5rfqH2g&s" alt=""><h3>Mushroom Risotto</h3><p>By Chef Isabella</p><p>⭐ 4.5</p><div class="price">₹270</div><button onclick="addToCart('Mushroom Risotto',270,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW94P_sB3PxdGxzlUHm1Dw0cI5N1V5rfqH2g&s','Chef Isabella')">Add</button></div>
+    <div class="food-card"><img src="https://s23209.pcdn.co/wp-content/uploads/2014/03/IMG_2622edit.jpg" alt=""><h3>Spaghetti Carbonara</h3><p>By Chef Luca</p><p>⭐ 4.9</p><div class="price">₹290</div><button onclick="addToCart('Spaghetti Carbonara',290,'https://s23209.pcdn.co/wp-content/uploads/2014/03/IMG_2622edit.jpg','Chef Luca')">Add</button></div>
+    <div class="food-card"><img src="https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-15.jpg" alt=""><h3>Tiramisu</h3><p>By Chef Giulia</p><p>⭐ 4.8</p><div class="price">₹200</div><button onclick="addToCart('Tiramisu',200,'https://tastesbetterfromscratch.com/wp-content/uploads/2017/04/Tiramisu-15.jpg','Chef Giulia')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0JIDK1_5dgA3xzzSI_ypDgYz74xxvorTTYQ&s" alt=""><h3>Calzone</h3><p>By Chef Angelo</p><p>⭐ 4.6</p><div class="price">₹240</div><button onclick="addToCart('Calzone',240,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0JIDK1_5dgA3xzzSI_ypDgYz74xxvorTTYQ&s','Chef Angelo')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJNFgjtKrDlmGiy2gSmanEQor6-KWV3hZUNQ&s" alt=""><h3>Ravioli</h3><p>By Chef Elena</p><p>⭐ 4.7</p><div class="price">₹260</div><button onclick="addToCart('Ravioli',260,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJNFgjtKrDlmGiy2gSmanEQor6-KWV3hZUNQ&s','Chef Elena')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPA3CbB2KFeMQGvk2qPj6lAP7h3wFnplzD1w&s" alt=""><h3>Pesto Pasta</h3><p>By Chef Antonio</p><p>⭐ 4.5</p><div class="price">₹230</div><button onclick="addToCart('Pesto Pasta',230,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPA3CbB2KFeMQGvk2qPj6lAP7h3wFnplzD1w&s','Chef Antonio')">Add</button></div>
+  </div>
+
+  <!-- Chinese Kitchen -->
+  <div class="food-items" id="chinese">
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Qrc3-vPlXeDWaT8w7Vtlfl7Fq6-_NVpwrw&s" alt=""><h3>Hakka Noodles</h3><p>By Chef Ling</p><p>⭐ 4.7</p><div class="price">₹160</div><button onclick="addToCart('Hakka Noodles',160,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3Qrc3-vPlXeDWaT8w7Vtlfl7Fq6-_NVpwrw&s','Chef Ling')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjJ_AY6EgsNUPRe76n37FwaECWvnXQ9qY6zw&s" alt=""><h3>Veg Manchurian</h3><p>By Chef Mei</p><p>⭐ 4.6</p><div class="price">₹170</div><button onclick="addToCart('Veg Manchurian',170,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjJ_AY6EgsNUPRe76n37FwaECWvnXQ9qY6zw&s','Chef Mei')">Add</button></div>
+    <div class="food-card"><img src="https://www.sharmispassions.com/wp-content/uploads/2014/11/SchezwanFriedRice5.jpg" alt=""><h3>Schezwan Fried Rice</h3><p>By Chef Chen</p><p>⭐ 4.8</p><div class="price">₹190</div><button onclick="addToCart('Schezwan Fried Rice',190,'https://www.sharmispassions.com/wp-content/uploads/2014/11/SchezwanFriedRice5.jpg','Chef Chen')">Add</button></div>
+    <div class="food-card"><img src="https://www.recipetineats.com/uploads/2017/09/Spring-Rolls-6.jpg" alt=""><h3>Spring Rolls</h3><p>By Chef Lee</p><p>⭐ 4.5</p><div class="price">₹150</div><button onclick="addToCart('Spring Rolls',150,'https://www.recipetineats.com/uploads/2017/09/Spring-Rolls-6.jpg','Chef Lee')">Add</button></div>
+    <div class="food-card"><img src="https://www.halfbakedharvest.com/wp-content/uploads/2020/11/Sesame-Chicken-Dumplings-in-Spicy-Broth-with-Garlic-Crisps-1.jpg" alt=""><h3>Chicken Dumplings</h3><p>By Chef Wang</p><p>⭐ 4.9</p><div class="price">₹210</div><button onclick="addToCart('Chicken Dumplings',210,'https://www.halfbakedharvest.com/wp-content/uploads/2020/11/Sesame-Chicken-Dumplings-in-Spicy-Broth-with-Garlic-Crisps-1.jpg','Chef Wang')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWLteqwORRI83yeM-ti5b_fRivux7XQW-C8w&s" alt=""><h3>Hot & Sour Soup</h3><p>By Chef Hua</p><p>⭐ 4.4</p><div class="price">₹120</div><button onclick="addToCart('Hot & Sour Soup',120,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWLteqwORRI83yeM-ti5b_fRivux7XQW-C8w&s','Chef Hua')">Add</button></div>
+    <div class="food-card"><img src="https://www.chinasichuanfood.com/wp-content/uploads/2013/08/egg-fried-rice-10.webp" alt=""><h3>Egg Fried Rice</h3><p>By Chef Zhao</p><p>⭐ 4.6</p><div class="price">₹180</div><button onclick="addToCart('Egg Fried Rice',180,'https://www.chinasichuanfood.com/wp-content/uploads/2013/08/egg-fried-rice-10.webp','Chef Zhao')">Add</button></div>
+    <div class="food-card"><img src="https://www.funfoodfrolic.com/wp-content/uploads/2019/10/Chilli-Chicken-1.jpg" alt=""><h3>Chili Chicken</h3><p>By Chef Bao</p><p>⭐ 4.8</p><div class="price">₹240</div><button onclick="addToCart('Chili Chicken',240,'https://www.funfoodfrolic.com/wp-content/uploads/2019/10/Chilli-Chicken-1.jpg','Chef Bao')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUjQeiCuh0B6NoJY2_4S4pc5igRK270EFvkg&s" alt=""><h3>Honey Chili Potato</h3><p>By Chef Min</p><p>⭐ 4.5</p><div class="price">₹160</div><button onclick="addToCart('Honey Chili Potato',160,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUjQeiCuh0B6NoJY2_4S4pc5igRK270EFvkg&s','Chef Min')">Add</button></div>
+    <div class="food-card"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwIXTwGqg1YOdT2EONawc7j7P38YPcvWYgQw&s" alt=""><h3>Schezwan Noodles</h3><p>By Chef Fen</p><p>⭐ 4.7</p><div class="price">₹200</div><button onclick="addToCart('Schezwan Noodles',200,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwIXTwGqg1YOdT2EONawc7j7P38YPcvWYgQw&s','Chef Fen')">Add</button></div>
+  </div>
+
+  <footer>© 2025 HomeBites | Made with ❤️ by our chefs</footer>
+
+  <!-- CART MODAL -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-box">
+      <h2>Your Cart 🛒</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total" id="cartTotal">Total: ₹0</div>
+      <button class="continue-btn" onclick="continueToCheckout()">Continue</button>
+      <button class="close-btn" onclick="closeCart()">Close</button>
+    </div>
+  </div>
+
+  <script>
+  let cart = [];
+
+  function showItems(type) {
+    document.getElementById('main').style.display = 'none';
+    document.querySelectorAll('.food-items').forEach(div => div.style.display = 'none');
+    document.getElementById(type).style.display = 'flex';
+    document.body.style.background = "linear-gradient(135deg, #ffe3d8, #fff6f0)";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Updated and simplified addToCart function
+  async function addToCart(item, price, img, chef) {
+    try {
+      console.log("Adding to cart:", item, price);
+      
+      const user = auth.currentUser;
+      console.log("User status:", user ? "Logged in" : "Not logged in");
+      
+      if (!user) {
+        // If user not logged in, use local cart only
+        const existing = cart.find(c => c.item === item);
+        if (existing) {
+          existing.qty++;
+        } else {
+          cart.push({ item, price, img, chef, qty: 1 });
+        }
+        document.getElementById('cartCount').textContent = cart.length;
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert(`${item} added to cart!`);
+        return;
+      }
+
+      // If user is logged in, save to Realtime Database
+      console.log("User UID:", user.uid);
+      const userCartRef = database.ref('carts/' + user.uid);
+      
+      // Get current cart from database
+      const snapshot = await userCartRef.once('value');
+      let userCart = [];
+      
+      if (snapshot.exists()) {
+        userCart = snapshot.val().items || [];
+        console.log("Loaded cart from DB:", userCart);
+      }
+      
+      // Add or update item
+      const existingItem = userCart.find(i => i.item === item);
+      if (existingItem) {
+        existingItem.qty++;
+      } else {
+        userCart.push({ 
+          item, 
+          price, 
+          img, 
+          chef,
+          qty: 1,
+          addedAt: new Date().toISOString()
+        });
+      }
+      
+      // Save to Realtime Database
+      console.log("Saving to DB:", userCart);
+      await userCartRef.set({ 
+        items: userCart,
+        lastUpdated: new Date().toISOString()
+      });
+      
+      // Update local cart and UI
+      cart = userCart;
+      document.getElementById('cartCount').textContent = cart.length;
+      alert(`${item} added to cart! 🎉`);
+      
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      console.error("Error details:", error.message, error.stack);
+      alert("Error adding item to cart. Please try again.");
+    }
+  }
+
+  function viewCart() {
+    const modal = document.getElementById('cartModal');
+    const items = document.getElementById('cartItems');
+    const total = document.getElementById('cartTotal');
+
+    if (cart.length === 0) {
+      items.innerHTML = "<p style='text-align:center;'>Your cart is empty 🛒</p>";
+      total.textContent = "Total: ₹0";
+    } else {
+      items.innerHTML = cart.map((i, index) => `
+        <div class="cart-item">
+          <img src="${i.img}" alt="${i.item}">
+          <div class="cart-info">
+            <strong>${i.item}</strong><br>₹${i.price}
+          </div>
+          <div class="qty">
+            <button onclick="changeQty(${index}, -1)">-</button>
+            <span>${i.qty}</span>
+            <button onclick="changeQty(${index}, 1)">+</button>
+          </div>
+        </div>
+      `).join('');
+
+      const totalAmount = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+      total.textContent = "Total: ₹" + totalAmount;
+    }
+    modal.style.display = 'flex';
+  }
+
+  function closeCart() {
+    document.getElementById('cartModal').style.display = 'none';
+  }
+
+  function changeQty(index, delta) {
+    cart[index].qty += delta;
+    if (cart[index].qty <= 0) cart.splice(index, 1);
+    document.getElementById('cartCount').textContent = cart.length;
+    viewCart();
+  }
+
+  function continueToCheckout() {
+    if (cart.length === 0) {
+      alert("Your cart is empty! Please add items first.");
+      return;
+    }
+
+    // Save cart data to localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    // If user is logged in, also save to Realtime Database
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        database.ref('carts/' + user.uid).set({
+          items: cart,
+          lastUpdated: new Date().toISOString()
+        });
+      } catch (error) {
+        console.error("Error saving cart to database:", error);
+      }
+    }
+
+    // Redirect to order summary
+    window.location.href = "order-summary.html";
+  }
+
+  // Real-time cart listener for logged-in users
+  function setupRealTimeCartListener() {
+    const user = auth.currentUser;
+    if (!user) return;
+    
+    const cartRef = database.ref('carts/' + user.uid);
+    
+    cartRef.on('value', (snapshot) => {
+      if (snapshot.exists()) {
+        cart = snapshot.val().items || [];
+        document.getElementById('cartCount').textContent = cart.length;
+        
+        // If cart modal is open, update it in real-time
+        if (document.getElementById('cartModal').style.display === 'flex') {
+          viewCart();
+        }
+      }
+    });
+  }
+
+  // Auth state listener - sets up real-time cart when user logs in
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log("User logged in:", user.email);
+      setupRealTimeCartListener();
+      
+      // Load user's cart from database
+      database.ref('carts/' + user.uid).once('value').then((snapshot) => {
+        if (snapshot.exists()) {
+          cart = snapshot.val().items || [];
+          document.getElementById('cartCount').textContent = cart.length;
+        }
+      });
+    } else {
+      console.log("User logged out");
+      // User logged out, use local cart
+      cart = JSON.parse(localStorage.getItem("cart")) || [];
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+  });
+  </script>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAyTvInHBSVKZNBEOnNYCqZ4XBbvMgW2-g",
+      authDomain: "homebites-57723.firebaseapp.com",
+      databaseURL: "https://homebites-57723-default-rtdb.firebaseio.com",
+      projectId: "homebites-57723",
+      storageBucket: "homebites-57723.firebasestorage.app",
+      messagingSenderId: "176325574598",
+      appId: "1:176325574598:web:13a92d38823239279fbcc7",
+      measurementId: "G-2VZT3F6YXN"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    
+    // Initialize Realtime Database and Auth
+    const database = firebase.database();
+    const auth = firebase.auth();
+
+    console.log("=== FIREBASE CONFIGURATION ===");
+    console.log("Firebase initialized:", firebase.apps.length > 0);
+    console.log("Database URL:", firebaseConfig.databaseURL);
+    console.log("Database instance:", database);
+    console.log("Auth instance:", auth);
+
+    // Test database connection
+    const testRef = database.ref('.info/connected');
+    testRef.on('value', (snapshot) => {
+      console.log("Database connected:", snapshot.val());
+    });
+
+    // Test database write
+    const debugRef = database.ref('debug');
+    debugRef.set({
+      test: "Connection successful",
+      timestamp: new Date().toISOString()
+    }).then(() => {
+      console.log("✅ Database write test: SUCCESS");
+    }).catch((error) => {
+      console.error("❌ Database write test: FAILED", error);
+    });
+  </script>
+</body>
+</html>
