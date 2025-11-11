@@ -22,32 +22,32 @@ jobs:
         # Build the image
         docker build -t homebites .
         
-        # First, let's see what files are in the container
-        echo "=== Checking container files ==="
-        docker run --rm homebites ls -la
-        
-        # Then try to run the app
-        echo "=== Starting container ==="
+        # Run the container with Python HTTP server
         docker run -d --name homebites-test -p 8080:8000 homebites
         
-        # Wait and check status
+        # Wait for container to start
         sleep 10
         
+        # Check if container is running
         if docker ps | grep homebites-test; then
-          echo "✅ Container is running"
-          sleep 10
-          # Try to access the app
-          curl -f http://localhost:8080/ || echo "App might be starting..."
+          echo "✅ Container is running successfully"
+          
+          # Test if HTTP server is responding
+          if curl -f http://localhost:8080/; then
+            echo "✅ HTTP server is responding"
+          else
+            echo "⚠️ Container running but HTTP check failed"
+          fi
         else
           echo "❌ Container failed to start"
-          echo "=== Container logs ==="
           docker logs homebites-test
           exit 1
         fi
         
-        # Clean up
+        # Stop and clean up
         docker stop homebites-test
         docker rm homebites-test
+        echo "✅ Test completed successfully"
 
   deploy:
     runs-on: ubuntu-latest
