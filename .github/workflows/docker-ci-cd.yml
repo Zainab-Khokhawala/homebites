@@ -22,18 +22,36 @@ jobs:
         # Build the image
         docker build -t homebites .
         
-        # Run the container
+        # Run the container in background
         docker run -d --name homebites-test -p 8080:8000 homebites
         
         # Wait for container to start
-        sleep 10
+        sleep 15
         
         # Check if container is running
-        docker ps | grep homebites-test
+        if docker ps | grep homebites-test; then
+          echo "✅ Container is running successfully"
+          # Test if application responds (with retry logic)
+          for i in {1..5}; do
+            if curl -f http://localhost:8080/; then
+              echo "✅ Application is responding"
+              break
+            else
+              echo "⏳ Application not ready yet, retrying in 5 seconds..."
+              sleep 5
+            fi
+          done
+        else
+          echo "❌ Container failed to start"
+          # Show container logs for debugging
+          docker logs homebites-test
+          exit 1
+        fi
         
-        # Stop the container
+        # Stop and clean up
         docker stop homebites-test
         docker rm homebites-test
+        echo "✅ Test completed successfully"
 
   deploy:
     runs-on: ubuntu-latest
