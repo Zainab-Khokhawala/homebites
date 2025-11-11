@@ -9,5 +9,5 @@ COPY . .
 
 EXPOSE 8000
 
-# Use Flask development server
-CMD ["python", "app.py"]
+# First, list files to debug
+CMD ["sh", "-c", "ls -la && python -c \"import os; print('Current directory:', os.getcwd()); print('Files:', os.listdir('.'))\""]
